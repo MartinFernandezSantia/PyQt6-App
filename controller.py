@@ -1,41 +1,45 @@
-import sys
-from Views.transactions_form import TransactionWindow
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QObject
+from Views.transactions_form import TransactionWindow
+from Views.menu import Menu
+
+class Controller:
+    def __init__(self):
+        self.app = QApplication([])
+        self.app.setStyle("fusion")
+        self.app.setApplicationName("Gestor de gastos")
 
 
+        self.menu = Menu()
 
-class Controller(QObject):
-    """Controla las interacciones entre la vista y el modelo. Responde a las interacciones 
-    del usuario, y actualiza la vista o el modelo cuando sea necesario.
-    """
-    def __init__(self, view, model):
-        super().__init__()
+        self.transaction_window = TransactionWindow()
+        
+        # Señales del menu
+        self.menu.boton_transacciones.clicked.connect(lambda: self.new_window(self.transaction_window))
 
-        self.view = view
-        self.model = model
+        # Connect signals to slots
+        self.transaction_window.button1.clicked.connect(lambda:self.new_transaction("Ingreso"))
+        self.transaction_window.button2.clicked.connect(lambda:self.new_transaction("Egreso"))
 
-        view.button1.clicked.connect(lambda:self.new_transaction("Ingreso"))
-        view.button2.clicked.connect(lambda:self.new_transaction("Egreso"))
+        self.menu.show()
+        self.app.exec()
 
-        self.view.show()
-
-    def new_transaction(self, transaction):
+    def new_transaction(self, transaction: str):
+        """" Toma los datos ingresados por el usuario en la TransactionWindow y los imprime
+        """
         data = {
-            "Nombre_transaccion": self.view.nombre_transaccion.currentText(),
-            "Dinero": self.view.cant_dinero.value(),
-            "Cantidad": self.view.cantidad.value(),
-            "Moneda": self.view.moneda.currentText(),
-            "Fecha_hora": self.view.fecha_hora.dateTime(),
-            "Categoria": self.view.categoria.currentText(),
-            "Metodo_pago": self.view.metodo_pago.currentText(),
+            "Nombre_transaccion": self.transaction_window.nombre_transaccion.currentText(),
+            "Dinero": self.transaction_window.cant_dinero.value(),
+            "Cantidad": self.transaction_window.cantidad.value(),
+            "Moneda": self.transaction_window.moneda.currentText(),
+            "Fecha_hora": self.transaction_window.fecha_hora.dateTime(),
+            "Categoria": self.transaction_window.categoria.currentText(),
+            "Metodo_pago": self.transaction_window.metodo_pago.currentText(),
             "Transaccion": transaction
         }
-
         print(data)
 
-app = QApplication(sys.argv)
-app.setStyle("fusion")
-view = TransactionWindow()
-window = Controller(view=view, model=None)
-app.exec()
+    def new_window(self, window):
+        window.show()
+
+if __name__ == "__main__":
+    controller = Controller()

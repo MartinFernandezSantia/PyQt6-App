@@ -7,8 +7,8 @@ class TransactionWindow(QWidget):
     def __init__(self):
         super(TransactionWindow, self).__init__()
 
+        # Configuraciones de la ventana
         self.resize(300, 200)
-        self.setWindowTitle("Gestor de gastos")
 
         # Layout principal
         self.layout = QVBoxLayout()
@@ -75,4 +75,3 @@ class TransactionWindow(QWidget):
         self.layout.addLayout(buttons_layout)
 
         self.setLayout(self.layout)
-
