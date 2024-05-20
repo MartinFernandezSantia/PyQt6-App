@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QApplication
 from Views.transactions_form import TransactionWindow
 from Views.menu import Menu
+from Model.models import Model
 
 class Controller:
     def __init__(self):
@@ -8,7 +9,7 @@ class Controller:
         self.app.setStyle("fusion")
         self.app.setApplicationName("Gestor de gastos")
 
-
+        self.model = Model()
         self.menu = Menu()
 
         self.transaction_window = TransactionWindow()
@@ -36,7 +37,7 @@ class Controller:
             "Metodo_pago": self.transaction_window.metodo_pago.currentText(),
             "Transaccion": transaction
         }
-        print(data)
+        self.model.guardar_datos(data)
 
     def new_window(self, window):
         window.show()
