@@ -22,25 +22,29 @@ class Save:
                'Metodo_pago': 'Efectivo',
                'Transaccion': 'Ingreso'
                 }
-        self.cursor.execute("""CREATE TABLE IF NOT EXIST trnasacciones(
-                        Id INT PRIMARY KEY 
-                        Nombre_transaccion VARCHAR(100) NOT NULL   
-                        Cantidad INT NOT NULL
-                        Dinero REAL NOT NULL
-                        Fecha_hora TEXT
-                        Categoria VARCHAR(50) NOT NULL
-                        Metodo_pago VARCHAR(50) NOT NULL
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS transacciones(
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                        Nombre_transaccion VARCHAR(100) NOT NULL,   
+                        Cantidad INT NOT NULL,
+                        Dinero REAL NOT NULL,
+                        Fecha_hora TEXT,
+                        Categoria VARCHAR(50) NOT NULL,
+                        Metodo_pago VARCHAR(50) NOT NULL,
                         Transaccion VARCHAR(20) NOT NULL
                          
                             )
         """)
         
-        d1['Fecha_hora'].toString("yyyy-MM-dd HH:mm:ss")
-        self.con.close()
+        self.guardar_datos(d1)
+        
         
         
     def guardar_datos(self, d1):
-
+        self.cursor.execute("""INSERT INTO transacciones(Nombre_transaccion, Cantidad, Dinero, Fecha_hora, Categoria, Metodo_pago, Transaccion)
+                               VALUES(?,?,?,?,?,?,?)
+                            """, (d1["Nombre_transaccion"],d1["Cantidad"],d1["Dinero"], d1["Fecha_hora"].toString("yyyy-MM-dd HH:mm:ss"), d1["Categoria"], d1["Metodo_pago"],d1["Transaccion"]))
+        self.con.commit()
+        self.con.close()
         
         return
     
